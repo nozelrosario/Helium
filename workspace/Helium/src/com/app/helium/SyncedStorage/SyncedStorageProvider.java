@@ -74,9 +74,9 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 		boolean insert_succeeded = false;
 		this.last_modified_date_time = new DateTime();
 		insert_succeeded = super.Insert();
-		if(insert_succeeded) {
-			SyncManager.registerSync(this);
-		}
+		//if(insert_succeeded) {
+		//	SyncManager.registerSync(this);
+		//}
 		return insert_succeeded;
 	}
 	
@@ -85,9 +85,9 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 		boolean update_succeeded = false;
 		this.last_modified_date_time = new DateTime();
 		update_succeeded = super.Update();
-		if(update_succeeded) {
-			SyncManager.registerSync(this);
-		}
+		//if(update_succeeded) {
+		//	SyncManager.registerSync(this);
+		//}
 		return update_succeeded;
 	}
 	
@@ -253,7 +253,7 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 								// If array of IStorageProvider
 								if(IStorageProvider.class.isAssignableFrom(field.getType().getComponentType())) {
 									for(int i=0 ; i< values.length ; i++) {
-										if(!(values[i].equals("")) && !(values[i].equals(null))) {
+										if((values[i] != null) && !(values[i].equals(""))) {
 											SyncedStorageProvider store_object = (SyncedStorageProvider) field.getType().newInstance();
 											store_object.LoadData(Long.valueOf(values[i]).longValue());
 											Array.set(field_value, i,store_object);
@@ -263,7 +263,7 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 									}									
 								} else {
 									for(int i=0 ; i< values.length ; i++) {
-										if(!(values[i].equals("")) && !(values[i].equals(null))) {
+										if((values[i] != null) && !(values[i].equals(""))) {
 											Array.set(field_value, i, Util.tryParse(field.getType().getComponentType(),values[i]));
 										} else {
 											Array.set(field_value, i,null);
@@ -279,7 +279,7 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 								//NR If array of IStorageProvider
 								if(IStorageProvider.class.isAssignableFrom(field.getType().getComponentType())) {
 									for(int i=0 ; i< values.length ; i++) {
-										if(!(values[i].equals("")) && !(values[i].equals(null))) {
+										if((values[i] != null) && !(values[i].equals(""))) {
 											SyncedStorageProvider store_object = (SyncedStorageProvider) field.getType().newInstance();
 											store_object.LoadData(Long.valueOf(values[i]).longValue());
 											add.invoke(field_value, store_object);
@@ -289,7 +289,7 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 									}									
 								} else {
 									for(int i=0 ; i< values.length ; i++) {
-										if(!(values[i].equals("")) && !(values[i].equals(null))) {
+										if((values[i] != null) && !(values[i].equals(""))) {
 											add.invoke(field_value, Util.tryParse(field.getType().getComponentType(),values[i]));
 										} else {
 											add.invoke(field_value, (Object)null);
@@ -351,6 +351,13 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 				} else {
 					this.id = 0;
 				}				
+		}
+	}
+	
+	@Override
+	public void triggerSync() {
+		if(this.getID() > 0) { 
+			SyncManager.registerSync(this);
 		}
 	}
 	

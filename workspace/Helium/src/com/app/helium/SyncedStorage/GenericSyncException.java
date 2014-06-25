@@ -27,6 +27,11 @@ public class GenericSyncException extends Exception {
 		//Application.LogError(this.message);
 	}
 	
+	public GenericSyncException(SyncRegister sync_register_object, String reason) {
+		this.message = "Sync Failed For =>  Entity : " + sync_register_object.sync_object_name + "  Faliure Reason : " + reason;
+		//Application.LogError(this.message);
+	}
+	
 	@Override
 	public String toString() {
 		return this.message;

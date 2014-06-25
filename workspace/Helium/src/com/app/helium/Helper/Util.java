@@ -57,7 +57,7 @@ public class Util {
 		
 		// Store date-time in UTC within  DB
 		public static long convertDateTimeToDBFormat(DateTime date_time) {
-			if(! date_time.equals(null)) {
+			if(date_time != null) {
 				DateTime utc_date_time = date_time.toDateTime(DateTimeZone.UTC);
 				long date_millis = utc_date_time.getMillis();
 				return date_millis;

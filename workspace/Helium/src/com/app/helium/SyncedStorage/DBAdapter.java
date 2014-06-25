@@ -241,9 +241,9 @@ public class DBAdapter {
 		
 		String OrderByClause;
 		Cursor results;
-		if(!sortBy.equals(""))
+		if((sortBy != null) && !sortBy.equals(""))
 		{
-			if(sortOption.equals("")) sortOption="asc"; //default sort ASC
+			if((sortOption != null) && sortOption.equals("")) sortOption="asc"; //default sort ASC
 			
 			OrderByClause= sortBy + " " + sortOption;
 		}
@@ -281,9 +281,9 @@ public class DBAdapter {
 		
 		open();
 		String OrderByClause;
-		if(!sortBy.equals(""))
+		if((sortBy != null) && !sortBy.equals(""))
 		{
-			if(sortOption.equals("")) sortOption="asc";  //default sort ASC
+			if((sortOption != null) && sortOption.equals("")) sortOption="asc";  //default sort ASC
 			
 			OrderByClause= sortBy + " " + sortOption;
 		}

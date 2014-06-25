@@ -24,37 +24,37 @@ public final class SyncManager {
 	}
 	
 	public static String registerSync(SyncedStorageProvider sync_object) {
-		SyncQueue sync_register = new SyncQueue(sync_object);
-		if(sync_register.getID() < 0) {
+		SyncQueue sync_queue_entry = new SyncQueue(sync_object);
+		if(sync_queue_entry.getID() <= 0) {
 			// new sync entry, so create new record.
-			sync_register.batch_id = UUID.randomUUID().toString();
-			sync_register.batch_sequence = 1;
-			sync_register.sync_object_name = sync_object.getClass().getName();
-			sync_register.sync_record_id = sync_object.getID();
-			sync_register.sync_status = SyncStatus.NOT_SYNCED;
-			sync_register.Save();
+			sync_queue_entry.batch_id = UUID.randomUUID().toString();
+			sync_queue_entry.batch_sequence = 1;
+			sync_queue_entry.sync_object_name = sync_object.getClass().getName();
+			sync_queue_entry.sync_record_id = sync_object.getID();
+			sync_queue_entry.sync_status = SyncStatus.NOT_SYNCED;
+			sync_queue_entry.Save();
 		}
-		return sync_register.batch_id;
+		return sync_queue_entry.batch_id;
 	}
 	
 	public static void registerSync(SyncedStorageProvider sync_object,String batch_id) {
-		SyncQueue sync_register = new SyncQueue(sync_object);
-		long max_batch_sequence = sync_register.getMaxSequenceInBatch(batch_id);
-		if(sync_register.getID() < 0) {
+		SyncQueue sync_queue_entry = new SyncQueue(sync_object);
+		long max_batch_sequence = sync_queue_entry.getMaxSequenceInBatch(batch_id);
+		if(sync_queue_entry.getID() <= 0) {
 			// new sync entry, so create new record.
-			sync_register.batch_id = batch_id;
-			sync_register.batch_sequence = max_batch_sequence + 1;
-			sync_register.sync_object_name = sync_object.getClass().getName();
-			sync_register.sync_record_id = sync_object.getID();
-			sync_register.sync_status = SyncStatus.NOT_SYNCED;
+			sync_queue_entry.batch_id = batch_id;
+			sync_queue_entry.batch_sequence = max_batch_sequence + 1;
+			sync_queue_entry.sync_object_name = sync_object.getClass().getName();
+			sync_queue_entry.sync_record_id = sync_object.getID();
+			sync_queue_entry.sync_status = SyncStatus.NOT_SYNCED;
 			
 		} else {
 			// sync already registered, so just update
-			sync_register.batch_id = batch_id;
-			sync_register.batch_sequence = max_batch_sequence + 1;
-			//sync_register.sync_status = SyncStatus.NOT_SYNCED;
+			sync_queue_entry.batch_id = batch_id;
+			sync_queue_entry.batch_sequence = max_batch_sequence + 1;
+			// sync_register.sync_status = SyncStatus.NOT_SYNCED;
 		}
-		sync_register.Save();
+		sync_queue_entry.Save();
 	}
 	
 	//NR: Incomming Sync Client <= Server
@@ -63,15 +63,6 @@ public final class SyncManager {
 			Thread sync_register_thread = new Thread(new SyncRegisterThread(sync_entity));
 			sync_register_thread.start();
 		}
-		
-		// for each Synced Table in sync_entities i.e for eg[Contacts,Messages,ScheduledTravel,TravelBroadcast] do following
-		// {
-		//		dynamically load classes for each entity & create its objects
-		// 		read the SyncInfo table and find [ where sync_object_name = sync_entities[i] ]
-		// 		if record not found, insert record with sync_object_name = sync_entities[i] & current_date time stamp & Trigger Sync in threaded way
-		// 		Else if record found check  if last_sync_date_time < (current_date_time + buffer) , then trigger Sync in threaded way
-		// 		[May be define another method for entire table sync and handle group data response]
-		// }
 	}
 	
 	//NR: Outgoing Sync Client => Server
@@ -79,7 +70,7 @@ public final class SyncManager {
 		SyncQueue pending_sync =  new SyncQueue();
 		ArrayList<String> batches = pending_sync.getDistinctBatches();
 		for(String batch_id : batches){
-			//NR: execute sync for each "sync_objects_in_batch" in seperate thread
+			//NR: execute sync for each "sync_objects_in_batch" in separate thread
 			ArrayList<SyncQueue> sync_objects_in_batch = pending_sync.getBatch(batch_id);			
 			Thread sync_thread = new Thread(new SyncBatchExecutorThread(sync_objects_in_batch));
 			sync_thread.start();

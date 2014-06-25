@@ -20,18 +20,18 @@ public class SyncQueue extends StorageProvider {
 	
 	public SyncQueue(){
 		super();
-		this.initializeTable("PendingSync"); 
+		this.initializeTable("SyncQueue"); 
 	}
 	
 	public SyncQueue(SyncedStorageProvider sync_object){
 		super();
-		this.initializeTable("PendingSync"); 
+		this.initializeTable("SyncQueue"); 
 		this.loadSyncDetails(sync_object);
 	}
 	
 	public SyncQueue(String table_name, long record_id){
 		super();
-		this.initializeTable("PendingSync"); 
+		this.initializeTable("SyncQueue"); 
 		this.loadSyncDetails(table_name, record_id);
 	}
 	
@@ -55,7 +55,7 @@ public class SyncQueue extends StorageProvider {
 		column_options.add("TEXT");
 		column_options.add("INTEGER");
 		column_options.add("TEXT");
-		column_options.add("TEXT UNIQUE(sync_object_name, record_id) ON CONFLICT REPLACE");
+		column_options.add("TEXT , UNIQUE(sync_object_name, sync_record_id) ON CONFLICT REPLACE");
 		return column_options;
 	}
 	
@@ -64,8 +64,8 @@ public class SyncQueue extends StorageProvider {
 	}
 	
 	public void loadSyncDetails(String object_name, long record_id){
-		String[] columns = this.table_columns.toArray(new String[this.table_columns.size()]);
-		Cursor data_cursor = Database.getDataCursor(columns, "sync_object_name=? AND sync_record_id=?", new String[]{object_name,String.valueOf(record_id)}, "", "","","asc");
+		//String[] columns = this.table_columns.toArray(new String[this.table_columns.size()]);
+		Cursor data_cursor = Database.getDataCursor(this.getAllColumns(), "sync_object_name=? AND sync_record_id=?", new String[]{object_name,String.valueOf(record_id)}, "", "","","asc");
 		if(data_cursor != null) {
 			while(data_cursor.moveToNext()) {
 				this.id =  data_cursor.getLong(data_cursor.getColumnIndex("id"));
@@ -81,7 +81,8 @@ public class SyncQueue extends StorageProvider {
 
 	public long getMaxSequenceInBatch(String batch_id){
 		long max_batch_sequence = 0;
-		Cursor data_cursor = Database.executeRawQuery("SELECT MAX(batch_sequence) from PendingSync WHERE batch_id=?", new String[]{String.valueOf(batch_id)});
+		String select_query = "SELECT MAX(batch_sequence) from " + this.getTableName() + " WHERE batch_id=?";
+		Cursor data_cursor = Database.executeRawQuery(select_query, new String[]{String.valueOf(batch_id)});
 		if(data_cursor != null) {
 			while(data_cursor.moveToNext()) {
 				max_batch_sequence =  data_cursor.getLong(data_cursor.getColumnIndex("batch_sequence"));
@@ -92,7 +93,8 @@ public class SyncQueue extends StorageProvider {
 	
 	public ArrayList<String> getDistinctBatches() {
 		ArrayList<String> batch_ids = new ArrayList<String>();
-		Cursor data_cursor = Database.executeRawQuery("SELECT DISTINCT batch_id from PendingSync", null);
+		String distinct_query = "SELECT DISTINCT batch_id from " + this.getTableName();
+		Cursor data_cursor = Database.executeRawQuery(distinct_query, null);
 		if(data_cursor != null) {
 			while(data_cursor.moveToNext()) {
 				batch_ids.add(data_cursor.getString(data_cursor.getColumnIndex("batch_id")));
@@ -124,8 +126,8 @@ public class SyncQueue extends StorageProvider {
 	
 	public ArrayList<SyncQueue> getBatch(String sync_batch_id) {
 		ArrayList<SyncQueue> sync_objects_in_batch = new ArrayList<SyncQueue>();
-		String[] columns = this.table_columns.toArray(new String[this.table_columns.size()]);
-		Cursor data_cursor = Database.getDataCursor(columns, "batch_id=? AND sync_status in (?,?)", new String[]{sync_batch_id, String.valueOf(SyncStatus.ERROR), String.valueOf(SyncStatus.NOT_SYNCED)}, "", "","batch_sequence","asc");
+		//String[] columns = this.table_columns.toArray(new String[this.table_columns.size()]);
+		Cursor data_cursor = Database.getDataCursor(this.getAllColumns(), "batch_id=? AND sync_status in (?,?)", new String[]{sync_batch_id, String.valueOf(SyncStatus.ERROR), String.valueOf(SyncStatus.NOT_SYNCED)}, "", "","batch_sequence","asc");
 		if(data_cursor != null) {
 			while(data_cursor.moveToNext()) {
 				SyncQueue sync_object = new SyncQueue();
@@ -156,9 +158,9 @@ public class SyncQueue extends StorageProvider {
 			JSONObject sync_data_json = sync_data_object.getJSON();
 		//NR: create new sync proxy and trigger sync
 			SyncProxy sync_proxi = new SyncProxy();
-			response_json = sync_proxi.send(sync_data_json.toString());
+			response_json = sync_proxi.send("PUSH_DATA_SYNC",sync_data_json.toString());
 		//NR: TODO: Expected JSON = {remote_id:123 , sync_success:true/false , sync_error:"error if any"}
-			if(!response_json.equals(null)) {
+			if(response_json != null) {
 				long remote_id = 0;
 				String sync_error = "none";
 				boolean sync_success = false;

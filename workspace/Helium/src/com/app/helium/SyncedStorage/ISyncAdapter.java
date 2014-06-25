@@ -10,6 +10,6 @@ public interface ISyncAdapter {
 	public JSONObject getJSON() throws ReferenceObjectNotSyncedException;
 	public void LoadData(JSONObject json_data);
 	public long getID(long remote_id);
-	
+	public void triggerSync();
 
 }

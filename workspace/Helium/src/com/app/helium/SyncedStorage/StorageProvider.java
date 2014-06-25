@@ -218,7 +218,7 @@ public abstract class StorageProvider implements IStorageProvider {
 								// If array of IStorageProvider
 								if(IStorageProvider.class.isAssignableFrom(field.getType().getComponentType())) {
 									for(int i=0 ; i< values.length ; i++) {
-										if(!(values[i].equals("")) && !(values[i].equals(null))) {
+										if((values[i] != null) && !(values[i].equals(""))) {
 											IStorageProvider store_object = (IStorageProvider) field.getType().newInstance();
 											store_object.LoadData(Long.valueOf(values[i]).longValue());
 											Array.set(field_value, i,store_object);
@@ -228,7 +228,7 @@ public abstract class StorageProvider implements IStorageProvider {
 									}									
 								} else {
 									for(int i=0 ; i< values.length ; i++) {
-										if(!(values[i].equals("")) && !(values[i].equals(null))) {
+										if((values[i] != null) && !(values[i].equals(""))) {
 											Array.set(field_value, i, Util.tryParse(field.getType().getComponentType(),values[i]));
 										} else {
 											Array.set(field_value, i, null);
@@ -244,7 +244,7 @@ public abstract class StorageProvider implements IStorageProvider {
 								//NR If array of IStorageProvider
 								if(IStorageProvider.class.isAssignableFrom(field.getType().getComponentType())) {
 									for(int i=0 ; i< values.length ; i++) {
-										if(!(values[i].equals("")) && !(values[i].equals(null))) {
+										if((values[i] != null) && !(values[i].equals(""))) {
 											IStorageProvider store_object = (IStorageProvider) field.getType().newInstance();
 											store_object.LoadData(Long.valueOf(values[i]).longValue());
 											add.invoke(field_value, store_object);
@@ -254,7 +254,7 @@ public abstract class StorageProvider implements IStorageProvider {
 									}									
 								} else {
 									for(int i=0 ; i< values.length ; i++) {
-										if(!(values[i].equals("")) && !(values[i].equals(null))) {
+										if((values[i] != null) && !(values[i].equals(""))) {
 											add.invoke(field_value, Util.tryParse(field.getType().getComponentType(),values[i]));
 										} else {
 											add.invoke(field_value, (Object)null);
@@ -384,7 +384,7 @@ public abstract class StorageProvider implements IStorageProvider {
 									// If array of IStorageProvider
 									if(IStorageProvider.class.isAssignableFrom(field.getType().getComponentType())) {
 										for(int i=0 ; i< values.length ; i++) {
-											if(!(values[i].equals("")) && !(values[i].equals(null))) {
+											if((values[i] != null) && !(values[i].equals(""))) {
 												IStorageProvider store_object = (IStorageProvider) field.getType().newInstance();
 												store_object.LoadData(Long.valueOf(values[i]).longValue());
 												Array.set(field_value, i,store_object);
@@ -394,7 +394,7 @@ public abstract class StorageProvider implements IStorageProvider {
 										}									
 									} else {
 										for(int i=0 ; i< values.length ; i++) {
-											if(!(values[i].equals("")) && !(values[i].equals(null))) {
+											if((values[i] != null) && !(values[i].equals(""))) {
 												Array.set(field_value, i, Util.tryParse(field.getType().getComponentType(),values[i]));
 											} else {
 												Array.set(field_value, i, null);
@@ -410,7 +410,7 @@ public abstract class StorageProvider implements IStorageProvider {
 									//NR If array of IStorageProvider
 									if(IStorageProvider.class.isAssignableFrom(field.getType().getComponentType())) {
 										for(int i=0 ; i< values.length ; i++) {
-											if(!(values[i].equals("")) && !(values[i].equals(null))) {
+											if((values[i] != null) && !(values[i].equals(""))) {
 												IStorageProvider store_object = (IStorageProvider) field.getType().newInstance();
 												store_object.LoadData(Long.valueOf(values[i]).longValue());
 												add.invoke(field_value, store_object);
@@ -420,7 +420,7 @@ public abstract class StorageProvider implements IStorageProvider {
 										}									
 									} else {
 										for(int i=0 ; i< values.length ; i++) {
-											if(!(values[i].equals("")) && !(values[i].equals(null))) {
+											if((values[i] != null) && !(values[i].equals(""))) {
 												add.invoke(field_value, Util.tryParse(field.getType().getComponentType(),values[i]));
 											} else {
 												add.invoke(field_value, (Object)null);
