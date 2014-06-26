@@ -128,7 +128,7 @@ public class SyncRegister extends StorageProvider {
 			this.error_description = "none";
 			this.Save();
 		} else {
-			Application.logError("SyncQueue", "Sync Faliure : " + sync_faliure_reason);
+			Application.logError("SyncQueue", "Sync Faliure for ["+ this.sync_object_name + "] : " + sync_faliure_reason);
 		// NR: Register Failed Sync
 			this.sync_status = SyncStatus.ERROR;
 			//this.last_sync_date_time = keep as it is;  //NR: @@@@@@ last_sync_date_time should not be changed else, sync logic will fail. @@@@@@@

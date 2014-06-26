@@ -14,14 +14,19 @@ public class SyncBatchExecutorThread implements Runnable {
 	
 	@Override
 	public void run() {
+		SyncManager.notifyPushSyncThreadStarted();
 		for(SyncQueue sync_object : this.batch_to_sync) {
 			try {
 				sync_object.startSync();
 			} catch (GenericSyncException e) {
-				Application.logError("Skipping other Sync_objects in the batch["+ sync_object.batch_id +"]");
+				Application.logError("Failded Sync for : " + sync_object.sync_object_name + "[" + sync_object.sync_record_id + "], Skipping other Sync_objects in the batch["+ sync_object.batch_id +"]");
 				break;
-			}
+			} /*catch (Exception e) {
+				Application.logError("Failded Sync for : " + sync_object.sync_object_name + "[" + sync_object.sync_record_id + "], Skipping other Sync_objects in the batch["+ sync_object.batch_id +"]");
+				break;
+			}*/
 		}
+		SyncManager.notifyPushSyncThreadFinished();
 	}
 
 }

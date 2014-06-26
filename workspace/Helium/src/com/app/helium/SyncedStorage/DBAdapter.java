@@ -225,6 +225,11 @@ public class DBAdapter {
 		return db.rawQuery(sqlQuery,selectionArgs);		
 	}
 	
+	public void executeRawQuery(String sqlQuery) {
+		open();
+		db.execSQL(sqlQuery);		
+	}
+	
 	/**
 	 * Get all entries in the database sorted by the given value.
 	 * @param columns List of columns to include in the result.
@@ -255,14 +260,15 @@ public class DBAdapter {
 		return results;
 	} 
 	
-	/**
+	/** @@@@@@ NR This will not work , should be execSQL()  @@@@@@@@@
 	 * Does the SQL UPDATE function on the table with given SQL string
 	 * @param sqlQuery an SQL Query starting at SET
-	 */
+	 
 	public void update(String sqlQuery) {
 		open();
 		db.rawQuery("UPDATE " + DATABASE_TABLE + sqlQuery, null);		
-	}
+	}*/
+	
 	
 	/**
 	 * Get all entries in the database sorted by the given value.
@@ -279,7 +285,7 @@ public class DBAdapter {
 	public Cursor getAllEntries(String[] columns, String selection, String[] selectionArgs,
 			String groupBy, String having, String sortBy, String sortOption, String limit) {
 		
-		open();
+		
 		String OrderByClause;
 		if((sortBy != null) && !sortBy.equals(""))
 		{
@@ -288,7 +294,7 @@ public class DBAdapter {
 			OrderByClause= sortBy + " " + sortOption;
 		}
 		else OrderByClause=null;
-			
+		open();	
 		return db.query(DATABASE_TABLE, columns, selection, selectionArgs, groupBy,
 				having, OrderByClause, limit);
 	}
@@ -324,8 +330,8 @@ public class DBAdapter {
 			//}
 		}
 		contentValues.put(KEY_TIMESTAMP, timeStamp);
-		
 		Application.logVerbose("Database","Update On : "+ this.DATABASE_TABLE + " With Values :" + contentValues.toString());
+		open();
 		return db.update(DATABASE_TABLE, contentValues, where, null);
 	}
 	

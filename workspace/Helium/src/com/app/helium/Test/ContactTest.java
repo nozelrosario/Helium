@@ -6,19 +6,20 @@ import com.app.helium.Application;
 import com.app.helium.Availablity;
 import com.app.helium.Contact;
 import com.app.helium.SyncedStorage.ReferenceObjectNotSyncedException;
-import com.app.helium.SyncedStorage.SyncManager;
 import com.app.helium.SyncedStorage.SyncQueue;
 
-public class ContactTest {
+public class ContactTest implements ITestable {
 	public Contact test_contact;
 	
 	public void runTest() {
-		this.createNewContact();
-		this.checkData();
-		this.checkUpdate();
-		this.checkSync();
-		SyncManager.startSync();
-		SyncManager.request_Sync();
+    
+		//NR: TEST : insert 10 random contacts & check consistency of data + trigger sync forcefully
+		for(int i=1 ; i<=10 ; i++) {
+			this.createNewContact();
+			this.checkData();
+			this.checkUpdate();
+			this.checkSync();
+		}
 	}
 	
 	public void createNewContact() {

@@ -10,9 +10,33 @@ import com.app.helium.TravelBroadcast;
 
 public final class SyncManager {
 	private static ArrayList<String> sync_entities;
+	public static boolean PUSH_SYNC_BUSY = false;
+	public static boolean PULL_SYNC_BUSY = false;
+	private static long PUSH_SYNC_ACTIVE_THREADS = 0;
+	private static long PULL_SYNC_ACTIVE_THREADS = 0;
 	
 	public static void initialize() {
 		registerSyncEntities();
+	}
+	
+	public static void notifyPushSyncThreadStarted() {
+		PUSH_SYNC_ACTIVE_THREADS = PUSH_SYNC_ACTIVE_THREADS + 1;
+		PUSH_SYNC_BUSY = (PUSH_SYNC_ACTIVE_THREADS <= 0);
+	}
+	
+	public static void notifyPullSyncThreadStarted() {
+		PULL_SYNC_ACTIVE_THREADS = PULL_SYNC_ACTIVE_THREADS + 1;
+		PUSH_SYNC_BUSY = (PUSH_SYNC_ACTIVE_THREADS <= 0);
+	}
+	
+	public static void notifyPushSyncThreadFinished() {
+		PUSH_SYNC_ACTIVE_THREADS = PUSH_SYNC_ACTIVE_THREADS - 1;
+		PUSH_SYNC_BUSY = (PUSH_SYNC_ACTIVE_THREADS <= 0);
+	}
+	
+	public static void notifyPullSyncThreadFinished() {
+		PULL_SYNC_ACTIVE_THREADS = PULL_SYNC_ACTIVE_THREADS - 1;
+		PUSH_SYNC_BUSY = (PUSH_SYNC_ACTIVE_THREADS <= 0);
 	}
 	
 	private static void registerSyncEntities() {

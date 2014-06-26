@@ -14,7 +14,7 @@ public class SyncRegisterThread implements Runnable {
 	
 	@Override
 	public void run() {
-		
+		SyncManager.notifyPullSyncThreadStarted();
 		SyncRegister sync_register_entry = new SyncRegister();
 		sync_register_entry.loadRegistryEntry(this.sync_object_name);
 		// If new, create entry
@@ -30,10 +30,12 @@ public class SyncRegisterThread implements Runnable {
 			try {
 				sync_register_entry.startSync();
 			} catch (GenericSyncException e) {
-				Application.logError("Sync Failed for Entity : ["+ this.sync_object_name +"]");
-			}
+				Application.logError("Sync Failed for Entity : ["+ this.sync_object_name +"] Reason : " + e.toString());
+			} /*catch (Exception e) {
+				Application.logError("Sync Failed for Entity : ["+ this.sync_object_name +"] Reason : " + e.toString());
+			}*/
 		}
-		
+		SyncManager.notifyPullSyncThreadFinished();
 	}
 
 }

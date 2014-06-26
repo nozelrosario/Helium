@@ -173,6 +173,11 @@ public class DatabaseQuery {
 		return database.executeQuery(sqlQuery, selectionArgs);
 	}
 	
+	public void executeRawQuery(String sqlQuery)
+	{
+		database.executeRawQuery(sqlQuery);
+	}
+	
 	/**
 	 * Destroy the reporter.
 	 * @throws Throwable

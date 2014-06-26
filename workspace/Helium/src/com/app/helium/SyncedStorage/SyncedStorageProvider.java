@@ -59,7 +59,7 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 	public boolean saveSyncData(JSONObject json_data) {
 		this.loadData(json_data);
 		boolean operation_status;
-		//NR: skip all events as Sync data in internal operation
+		//NR: skip all events as Sync data is internal operation
 			skip_insert_update_events = true;  
 			if(this.id <= 0) {
 				operation_status = super.insert();   //NR: call base class methods to skip setting "last_modified_date_time", as this will come from sync data 
@@ -83,7 +83,7 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 		this.last_modified_date_time = new DateTime();
 		insert_succeeded = super.insert();
 		if(insert_succeeded) {
-			SyncManager.registerSync(this);
+			this.triggerSync();
 		}
 		return insert_succeeded;
 	}
@@ -94,7 +94,7 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 		this.last_modified_date_time = new DateTime();
 		update_succeeded = super.update();
 		if(update_succeeded) {
-			SyncManager.registerSync(this);
+			this.triggerSync();
 		}
 		return update_succeeded;
 	}
@@ -130,11 +130,12 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 		String sync_date_time = String.valueOf(Util.convertDateTimeToDBFormat(new DateTime()));
 		String update_query;
 		if(remote_record_id > 0) {
-			update_query = "UPDATE " + this.getTableName() + " SET last_sync_date_time = '" + sync_date_time + "' , last_sync_status = '" + sync_status.toString()  + "' , remote_id = '" + String.valueOf(remote_record_id) +  "' , last_sync_error_info = '" + sync_error_info + "'  WHERE id = " + String.valueOf(this.id) ;
+			update_query = "UPDATE " + this.getTableName() + " SET last_sync_date_time = '" + sync_date_time + "' , last_sync_status = '" + sync_status.toString()  + "' , remote_id = '" + String.valueOf(remote_record_id) +  "' , last_sync_error_info = '" + sync_error_info + "'  WHERE id = '" + String.valueOf(this.id) + "'" ;
 		} else {
-			update_query = "UPDATE " + this.getTableName() + " SET last_sync_date_time = '" + sync_date_time + "' , last_sync_status = '" + sync_status.toString()  + "' , last_sync_error_info = '" + sync_error_info + "'  WHERE id = " + String.valueOf(this.id) ;
+			update_query = "UPDATE " + this.getTableName() + " SET last_sync_date_time = '" + sync_date_time + "' , last_sync_status = '" + sync_status.toString()  + "' , last_sync_error_info = '" + sync_error_info + "'  WHERE id = '" + String.valueOf(this.id) +"'" ;
 		}
-		Database.executeRawQuery(update_query, null);
+		Application.logDebug("Calling Update for Error Sync : " + update_query);
+		Database.executeRawQuery(update_query);
 	}
 	
 	@Override

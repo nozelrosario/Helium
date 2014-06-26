@@ -504,4 +504,14 @@ public abstract class StorageProvider implements IStorageProvider {
 	public abstract void onBeforeDelete();
 
 	public abstract void onAfterDelete();
+	
+	protected void finalize()
+	{
+		try {
+			Database.destroy();
+		} catch (Throwable e)
+		{
+			Application.logError("Database", "StorageProvider.finalize()  FAILED :" + e.toString());
+		}
+	}
 }

@@ -195,7 +195,7 @@ public class SyncQueue extends StorageProvider {
 		}
 		
 		if(!sync_complete) {
-			Application.logError("SyncQueue", "Sync Faliure : " + sync_faliure_reason);
+			Application.logError("SyncQueue", "Sync Faliure for[ "+ this.sync_object_name +" ] : " + sync_faliure_reason);
 			// NR: Register Failed Sync
 			this.registerFailedSync(sync_faliure_reason);
 			throw new GenericSyncException(this, sync_faliure_reason);
