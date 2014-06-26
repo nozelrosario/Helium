@@ -7,8 +7,8 @@ import android.util.Log;
 
 public class Application {
 
-	private static String LoggerTag = ApplicationSettings.getInstance().LoggerTag;
-	private static String LogLevel = ApplicationSettings.getInstance().LogLevel;
+	private static String logger_tag = ApplicationSettings.getInstance().LoggerTag;
+	private static String log_level = ApplicationSettings.getInstance().LogLevel;
 	
 	//NR: This is the place for application Initialization
 	// should contain bootstrapping code realted to application
@@ -16,78 +16,78 @@ public class Application {
 	public static void initialize(Context ctx) {
 		
 		SyncManager.initialize();
-		SetContext(ctx);
+		setContext(ctx);
 	}
 		
-	public static Context GetContext() {
+	public static Context getContext() {
 		return ApplicationSettings.getInstance().application_context;
 	}
 	
-	public static void SetContext(Context ctx){
+	public static void setContext(Context ctx){
 		 ApplicationSettings.getInstance().application_context = ctx;
 	}
 	
-	public static String GetDatabaseName() {
+	public static String getDatabaseName() {
 		return ApplicationSettings.getInstance().database_name;
 	}
 	
-	public static void LogError(String error_message){
-		if(LogLevel.contains("Error")){
-			Log.e(LoggerTag, error_message);
+	public static void logError(String error_message){
+		if(log_level.contains("Error")){
+			Log.e(logger_tag, error_message);
 		}		
 	}
 	
-	public static void LogWarning(String error_message){
-		if(LogLevel.contains("Warning")){
-			Log.w(LoggerTag, error_message);
+	public static void logWarning(String error_message){
+		if(log_level.contains("Warning")){
+			Log.w(logger_tag, error_message);
 		}		
 	}
 	
-	public static void LogInfo(String error_message){
-		if(LogLevel.contains("Info")){
-			Log.w(LoggerTag, error_message);
+	public static void logInfo(String error_message){
+		if(log_level.contains("Info")){
+			Log.w(logger_tag, error_message);
 		}		
 	}
 	
-	public static void LogDebug(String error_message){
-		if(LogLevel.contains("Debug")){
-			Log.d(LoggerTag, error_message);
+	public static void logDebug(String error_message){
+		if(log_level.contains("Debug")){
+			Log.d(logger_tag, error_message);
 		}		
 	}
 	
-	public static void LogVerbose(String error_message){
-		if(LogLevel.contains("Verbose")){
-			Log.d(LoggerTag, error_message);
+	public static void logVerbose(String error_message){
+		if(log_level.contains("Verbose")){
+			Log.d(logger_tag, error_message);
 		}		
 	}
 	
-	public static void LogError(String sub_tag, String error_message){
-		if(LogLevel.contains("Error")){
-			Log.e(LoggerTag + "." + sub_tag, error_message);
+	public static void logError(String sub_tag, String error_message){
+		if(log_level.contains("Error")){
+			Log.e(logger_tag + "." + sub_tag, error_message);
 		}		
 	}
 	
-	public static void LogWarning(String sub_tag, String error_message){
-		if(LogLevel.contains("Warning")){
-			Log.w(LoggerTag + "." + sub_tag, error_message);
+	public static void logWarning(String sub_tag, String error_message){
+		if(log_level.contains("Warning")){
+			Log.w(logger_tag + "." + sub_tag, error_message);
 		}		
 	}
 	
-	public static void LogInfo(String sub_tag, String error_message){
-		if(LogLevel.contains("Info")){
-			Log.w(LoggerTag + "." + sub_tag, error_message);
+	public static void logInfo(String sub_tag, String error_message){
+		if(log_level.contains("Info")){
+			Log.w(logger_tag + "." + sub_tag, error_message);
 		}		
 	}
 	
-	public static void LogDebug(String sub_tag, String error_message){
-		if(LogLevel.contains("Debug")){
-			Log.d(LoggerTag + "." + sub_tag, error_message);
+	public static void logDebug(String sub_tag, String error_message){
+		if(log_level.contains("Debug")){
+			Log.d(logger_tag + "." + sub_tag, error_message);
 		}		
 	}
 	
-	public static void LogVerbose(String sub_tag, String error_message){
-		if(LogLevel.contains("Verbose")){
-			Log.d(LoggerTag + "." + sub_tag, error_message);
+	public static void logVerbose(String sub_tag, String error_message){
+		if(log_level.contains("Verbose")){
+			Log.d(logger_tag + "." + sub_tag, error_message);
 		}		
 	}
 }

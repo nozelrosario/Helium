@@ -16,14 +16,6 @@ import android.database.Cursor;
 
 public abstract class SyncedStorageProvider extends StorageProvider implements ISyncAdapter {
 
-//	public ArrayList<String> table_columns;
-//	public ArrayList<String> table_column_options;
-//	private String table_name;
-//	private String databaseName;
-//	private Context application_context;
-//	protected DatabaseQuery Database;
-//	protected boolean skip_insert_update_events = false;
-
 	public DateTime last_modified_date_time;
 	public DateTime last_sync_date_time;
 	public String last_sync_error_info;
@@ -34,14 +26,14 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 	
 	protected void initializeTable(String table_name) {
 		this.table_name = table_name;
-		this.databaseName = Application.GetDatabaseName();
-		this.application_context = Application.GetContext();
-		this.table_columns = Columns();
-		this.table_column_options = ColumnOptions();
+		this.databaseName = Application.getDatabaseName();
+		this.application_context = Application.getContext();
+		this.table_columns = columns();
+		this.table_column_options = columnOptions();
 		Database = new DatabaseQuery(application_context,this.databaseName,this.table_name,this.table_columns,this.table_column_options);
 	}
 	
-	public ArrayList<String> Columns() {
+	public ArrayList<String> columns() {
 		ArrayList<String> columns = new ArrayList<String>();
 		columns.add("last_modified_date_time");
 		columns.add("last_sync_date_time");
@@ -52,7 +44,7 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 		return columns;
 	}
 
-	public ArrayList<String> ColumnOptions() {
+	public ArrayList<String> columnOptions() {
 		ArrayList<String> column_options = new ArrayList<String>();
 		column_options.add("INTEGER");
 		column_options.add("INTEGER");
@@ -64,30 +56,46 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 	}
 
 	@Override
+	public boolean saveSyncData(JSONObject json_data) {
+		this.loadData(json_data);
+		boolean operation_status;
+		//NR: skip all events as Sync data in internal operation
+			skip_insert_update_events = true;  
+			if(this.id <= 0) {
+				operation_status = super.insert();   //NR: call base class methods to skip setting "last_modified_date_time", as this will come from sync data 
+			} else {
+				operation_status = super.update();   //NR: call base class methods to skip setting "last_modified_date_time", as this will come from sync data 
+			}
+		//NR: restore event call after operation complete
+			skip_insert_update_events = false;
+			return operation_status;
+	}
+	
+	@Override
 	public boolean Save() {
 		this.last_modified_date_time = new DateTime();
 		return super.Save();
 	}
 	
 	@Override
-	public boolean Insert() {
+	public boolean insert() {
 		boolean insert_succeeded = false;
 		this.last_modified_date_time = new DateTime();
-		insert_succeeded = super.Insert();
-		//if(insert_succeeded) {
-		//	SyncManager.registerSync(this);
-		//}
+		insert_succeeded = super.insert();
+		if(insert_succeeded) {
+			SyncManager.registerSync(this);
+		}
 		return insert_succeeded;
 	}
 	
 	@Override
-	public boolean Update() {
+	public boolean update() {
 		boolean update_succeeded = false;
 		this.last_modified_date_time = new DateTime();
-		update_succeeded = super.Update();
-		//if(update_succeeded) {
-		//	SyncManager.registerSync(this);
-		//}
+		update_succeeded = super.update();
+		if(update_succeeded) {
+			SyncManager.registerSync(this);
+		}
 		return update_succeeded;
 	}
 	
@@ -198,13 +206,13 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 				}
 				
 			} catch (IllegalAccessException e) {
-				Application.LogError("Database", "StorageProvider.getJSON() :" + e.toString());
+				Application.logError("Database", "StorageProvider.getJSON() :" + e.toString());
 			} catch (IllegalArgumentException e) {
-				Application.LogError("Database","StorageProvider.getJSON() :" + e.toString());
+				Application.logError("Database","StorageProvider.getJSON() :" + e.toString());
 			} catch (NoSuchFieldException e) {
-				Application.LogError("Database","StorageProvider.getJSON() :" + e.toString());
+				Application.logError("Database","StorageProvider.getJSON() :" + e.toString());
 			} catch (JSONException e) {
-				Application.LogError("Database","StorageProvider.getJSON() :" + e.toString());
+				Application.logError("Database","StorageProvider.getJSON() :" + e.toString());
 			}
 			
 		}
@@ -213,7 +221,7 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 	
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void LoadData(JSONObject json_data){
+	public void loadData(JSONObject json_data){
 		String[] columns = this.getAllColumns(); //this.table_columns.toArray(new String[this.table_columns.size()]);
 		if(json_data != null) {
 			String column;
@@ -255,7 +263,7 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 									for(int i=0 ; i< values.length ; i++) {
 										if((values[i] != null) && !(values[i].equals(""))) {
 											SyncedStorageProvider store_object = (SyncedStorageProvider) field.getType().newInstance();
-											store_object.LoadData(Long.valueOf(values[i]).longValue());
+											store_object.loadData(Long.valueOf(values[i]).longValue());
 											Array.set(field_value, i,store_object);
 										} else {
 											Array.set(field_value, i,null);
@@ -281,7 +289,7 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 									for(int i=0 ; i< values.length ; i++) {
 										if((values[i] != null) && !(values[i].equals(""))) {
 											SyncedStorageProvider store_object = (SyncedStorageProvider) field.getType().newInstance();
-											store_object.LoadData(Long.valueOf(values[i]).longValue());
+											store_object.loadData(Long.valueOf(values[i]).longValue());
 											add.invoke(field_value, store_object);
 										} else {
 											add.invoke(field_value, (Object)null);
@@ -308,12 +316,12 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 							} else if(SyncedStorageProvider.class.isAssignableFrom(field.getType().getClass())) {   // If Foreign Key
 								//NR cast the value to IStorageProvider Type and do LoadData based on ForeignKey value from DB.
 								SyncedStorageProvider store_object = (SyncedStorageProvider) field.getType().newInstance();
-								store_object.LoadData(json_data.getLong(column));
+								store_object.loadData(json_data.getLong(column));
 								field_value = store_object; 
 							} else {
 								//NR cast the value to proper type
 								//NR: This is Risky and Prone to fail.
-								Application.LogWarning("Database","DataType not Supported.Trying Generic Parse un-supported Data type");
+								Application.logWarning("Database","DataType not Supported.Trying Generic Parse un-supported Data type");
 								field_value = Util.tryParse(field.getType(),json_data.getString(column));
 							}
 	
@@ -323,21 +331,21 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 						field.set(this,field_value);	
 						
 					} catch (IllegalAccessException e) {
-						Application.LogError("Database", "StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database", "StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
 					} catch (IllegalArgumentException e) {
-						Application.LogError("Database","StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database","StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
 					} catch (NoSuchFieldException e) {
-						Application.LogError("Database","StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database","StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
 					} catch (ClassCastException e) {
-						Application.LogError("Database","StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database","StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
 					} catch (InstantiationException e) {
-						Application.LogError("Database","StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database","StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
 					} catch (NoSuchMethodException e) {
-						Application.LogError("Database","StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database","StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
 					} catch (InvocationTargetException e) {
-						Application.LogError("Database","StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database","StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
 					} catch (JSONException e) {
-						Application.LogError("Database","StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database","StorageProvider.LoadData(JSON) on column[" + column + "] FAILED :" + e.toString());
 					}
 				}
 				
@@ -346,7 +354,7 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 					try {
 						this.id = this.getID(json_data.getLong("remote_id"));
 					} catch (JSONException e) {
-						Application.LogError("Database","StorageProvider.LoadData(JSON) on column[remote_id] FAILED :" + e.toString());
+						Application.logError("Database","StorageProvider.LoadData(JSON) on column[remote_id] FAILED :" + e.toString());
 					}
 				} else {
 					this.id = 0;
@@ -361,20 +369,20 @@ public abstract class SyncedStorageProvider extends StorageProvider implements I
 		}
 	}
 	
-	public abstract void OnAfterSave();
+	public abstract void onAfterSave();
 
-	public abstract void OnBeforeSave();
+	public abstract void onBeforeSave();
 
-	public abstract void OnAfterInsert();
+	public abstract void onAfterInsert();
 
-	public abstract void OnBeforeInsert();
+	public abstract void onBeforeInsert();
 
-	public abstract void OnBeforeUpdate();
+	public abstract void onBeforeUpdate();
 
-	public abstract void OnAfterUpdate();
+	public abstract void onAfterUpdate();
 
-	public abstract void OnBeforeDelete();
+	public abstract void onBeforeDelete();
 
-	public abstract void OnAfterDelete();
+	public abstract void onAfterDelete();
 
 }

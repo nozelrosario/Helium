@@ -36,7 +36,7 @@ public class SyncQueue extends StorageProvider {
 	}
 	
 	@Override
-	public ArrayList<String> Columns() {
+	public ArrayList<String> columns() {
 		ArrayList<String> columns = new ArrayList<String>();
 		columns.add("batch_id");
 		columns.add("batch_sequence");
@@ -48,7 +48,7 @@ public class SyncQueue extends StorageProvider {
 	}
 
 	@Override
-	public ArrayList<String> ColumnOptions() {
+	public ArrayList<String> columnOptions() {
 		ArrayList<String> column_options = new ArrayList<String>();
 		column_options.add("TEXT");
 		column_options.add("INTEGER");
@@ -113,14 +113,14 @@ public class SyncQueue extends StorageProvider {
 			SyncedStorageProvider sync_data_object;
 			try {
 				sync_data_object = (SyncedStorageProvider) Class.forName(this.sync_object_name).newInstance();
-				sync_data_object.LoadData(this.sync_record_id);
+				sync_data_object.loadData(this.sync_record_id);
 				sync_data_object.updateSyncInformation(SyncStatus.ERROR);
 			} catch (InstantiationException e) {
-				Application.LogError("Sync","SyncQueue.registerFailedSync() Failed : " + e.toString());
+				Application.logError("Sync","SyncQueue.registerFailedSync() Failed : " + e.toString());
 			} catch (IllegalAccessException e) {
-				Application.LogError("Sync","SyncQueue.registerFailedSync() Failed : " + e.toString());
+				Application.logError("Sync","SyncQueue.registerFailedSync() Failed : " + e.toString());
 			} catch (ClassNotFoundException e) {
-				Application.LogError("Sync","SyncQueue.registerFailedSync() Failed : " + e.toString());
+				Application.logError("Sync","SyncQueue.registerFailedSync() Failed : " + e.toString());
 			}	
 	}
 	
@@ -154,7 +154,7 @@ public class SyncQueue extends StorageProvider {
 			this.Save();
 		
 			SyncedStorageProvider sync_data_object = (SyncedStorageProvider) Class.forName(this.sync_object_name).newInstance();
-			sync_data_object.LoadData(this.sync_record_id);
+			sync_data_object.loadData(this.sync_record_id);
 			JSONObject sync_data_json = sync_data_object.getJSON();
 		//NR: create new sync proxy and trigger sync
 			SyncProxy sync_proxi = new SyncProxy();
@@ -171,7 +171,7 @@ public class SyncQueue extends StorageProvider {
 				if(sync_success && (remote_id > 0)) {
 					sync_data_object.updateSyncInformation(remote_id, SyncStatus.SUCCESS, sync_error);
 				// Delete current queue entry after successful sync.
-					this.Delete(); 
+					this.delete(); 
 					sync_complete = true;
 				} else {
 					sync_faliure_reason = "Response JSON not complete, Error on Server : " + sync_error;
@@ -195,7 +195,7 @@ public class SyncQueue extends StorageProvider {
 		}
 		
 		if(!sync_complete) {
-			Application.LogError("SyncQueue", "Sync Faliure : " + sync_faliure_reason);
+			Application.logError("SyncQueue", "Sync Faliure : " + sync_faliure_reason);
 			// NR: Register Failed Sync
 			this.registerFailedSync(sync_faliure_reason);
 			throw new GenericSyncException(this, sync_faliure_reason);
@@ -203,49 +203,49 @@ public class SyncQueue extends StorageProvider {
 	}
 	
 	@Override
-	public void OnAfterSave() {
+	public void onAfterSave() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnBeforeSave() {
+	public void onBeforeSave() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnAfterInsert() {
+	public void onAfterInsert() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnBeforeInsert() {
+	public void onBeforeInsert() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnBeforeUpdate() {
+	public void onBeforeUpdate() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnAfterUpdate() {
+	public void onAfterUpdate() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnBeforeDelete() {
+	public void onBeforeDelete() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnAfterDelete() {
+	public void onAfterDelete() {
 		// TODO Auto-generated method stub
 		
 	}

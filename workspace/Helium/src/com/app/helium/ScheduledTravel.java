@@ -17,9 +17,9 @@ public class ScheduledTravel extends SyncedStorageProvider {
 		this.initializeTable("ScheduledTravel");
 	}
 	
-	public ArrayList<String> Columns() {
+	public ArrayList<String> columns() {
 		ArrayList<String> columns = new ArrayList<String>();
-		columns.addAll(super.Columns());
+		columns.addAll(super.columns());
 		columns.add("login");
 		columns.add("first_name");
 		columns.add("last_name");
@@ -34,9 +34,9 @@ public class ScheduledTravel extends SyncedStorageProvider {
 		return columns;
 	}
 
-	public ArrayList<String> ColumnOptions() {
+	public ArrayList<String> columnOptions() {
 		ArrayList<String> column_options = new ArrayList<String>();
-		column_options.addAll(super.ColumnOptions());
+		column_options.addAll(super.columnOptions());
 		column_options.add("TEXT");
 		column_options.add("TEXT");
 		column_options.add("TEXT");
@@ -52,55 +52,55 @@ public class ScheduledTravel extends SyncedStorageProvider {
 	}
 	
 	@Override
-	public void LoadData(JSONObject json_data) {
+	public void loadData(JSONObject json_data) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnAfterSave() {
+	public void onAfterSave() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnBeforeSave() {
+	public void onBeforeSave() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnAfterInsert() {
+	public void onAfterInsert() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnBeforeInsert() {
+	public void onBeforeInsert() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnBeforeUpdate() {
+	public void onBeforeUpdate() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnAfterUpdate() {
+	public void onAfterUpdate() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnBeforeDelete() {
+	public void onBeforeDelete() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnAfterDelete() {
+	public void onAfterDelete() {
 		// TODO Auto-generated method stub
 		
 	}

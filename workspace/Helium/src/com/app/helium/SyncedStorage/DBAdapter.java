@@ -109,7 +109,7 @@ public class DBAdapter {
 	 * Close the connection to the database.
 	 */
 	public void close() {
-		Application.LogVerbose("Database", "Calling DB Close on Table:"+ this.DATABASE_TABLE);
+		Application.logVerbose("Database", "Calling DB Close on Table:"+ this.DATABASE_TABLE);
 		db.close();
 	}
 	
@@ -130,7 +130,7 @@ public class DBAdapter {
 			//}
 		}
 		contentValues.put(KEY_TIMESTAMP, timeStamp);
-		Application.LogVerbose("Database","Insert On : "+ this.DATABASE_TABLE + " With Values :" + contentValues.toString());
+		Application.logVerbose("Database","Insert On : "+ this.DATABASE_TABLE + " With Values :" + contentValues.toString());
 		open();
 		return db.insert(DATABASE_TABLE, null, contentValues);
 	}
@@ -193,7 +193,7 @@ public class DBAdapter {
 		} else if(value instanceof IStorageProvider) {    //NR If FK refrence, then cast to IStorageProvider & take (long) id of object
 			contentValues.put(key,((IStorageProvider)value).getID());
 		} else{			
-			Application.LogWarning("Database","Un-Supported Datatype, Trying Parse to String for storing in DB");
+			Application.logWarning("Database","Un-Supported Datatype, Trying Parse to String for storing in DB");
 			contentValues.put(key,value.toString());  //NR: Else put value as String
 			//throw new UnSupportedDataTypeException(key,value);
 		}
@@ -325,7 +325,7 @@ public class DBAdapter {
 		}
 		contentValues.put(KEY_TIMESTAMP, timeStamp);
 		
-		Application.LogVerbose("Database","Update On : "+ this.DATABASE_TABLE + " With Values :" + contentValues.toString());
+		Application.logVerbose("Database","Update On : "+ this.DATABASE_TABLE + " With Values :" + contentValues.toString());
 		return db.update(DATABASE_TABLE, contentValues, where, null);
 	}
 	
@@ -374,7 +374,7 @@ public class DBAdapter {
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			// Log the version upgrade
-			Application.LogWarning("Database", "Upgrading from version " + oldVersion +
+			Application.logWarning("Database", "Upgrading from version " + oldVersion +
 					" to " + newVersion + ", which will destroy all old data");
 			
 			db.execSQL("DROP TABLE IF EXISTS " + tableName);
@@ -388,7 +388,7 @@ public class DBAdapter {
 		 */
 		@Override
 		public void onOpen(SQLiteDatabase db) {
-			Application.LogVerbose("Database", "Database Opened Successfully for Table:" + this.tableName);
+			Application.logVerbose("Database", "Database Opened Successfully for Table:" + this.tableName);
 			db.execSQL(creationString);
 		}
 		

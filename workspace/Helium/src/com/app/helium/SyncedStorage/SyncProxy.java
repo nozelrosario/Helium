@@ -25,14 +25,14 @@ public class SyncProxy {
 		// 5. control_info {if any}
 		// FINALLY... makeHttpRequest() to server Also delegate HTTP exceptions to "GenericSyncException" 
 		
-		Application.LogInfo("SyncProxy","Data Ready for Sync: " + json_data_string);
+		Application.logInfo("SyncProxy","Data Ready for Sync: " + json_data_string);
 		return response_json;
 	}
 	
 	private void makeHttpRequest() {
 		
 		//TODO
-		Application.LogInfo("SyncProxy","Data Ready for Sendinig to server: ");
+		Application.logInfo("SyncProxy","Data Ready for Sendinig to server: ");
 	}
 	
 }

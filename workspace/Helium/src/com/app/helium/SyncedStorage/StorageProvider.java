@@ -30,16 +30,16 @@ public abstract class StorageProvider implements IStorageProvider {
 	
 	protected void initializeTable(String table_name) {
 		this.table_name = table_name;
-		this.databaseName = Application.GetDatabaseName();
-		this.application_context = Application.GetContext();
-		this.table_columns = this.Columns();
-		this.table_column_options = this.ColumnOptions();
+		this.databaseName = Application.getDatabaseName();
+		this.application_context = Application.getContext();
+		this.table_columns = this.columns();
+		this.table_column_options = this.columnOptions();
 		Database = new DatabaseQuery(application_context,this.databaseName,this.table_name,this.table_columns,this.table_column_options);
 	}
 	
-	public abstract ArrayList<String> Columns();   // TODO: could use annotations on variables for column definition, for now hard-coded is fine
+	public abstract ArrayList<String> columns();   // TODO: could use annotations on variables for column definition, for now hard-coded is fine
 
-	public abstract ArrayList<String> ColumnOptions();   // TODO: could use annotations on variables for options definition, for now hard-coded is fine
+	public abstract ArrayList<String> columnOptions();   // TODO: could use annotations on variables for options definition, for now hard-coded is fine
 
 	private void UpdateColumnData() {
 		for(String column : this.table_columns) {
@@ -47,11 +47,11 @@ public abstract class StorageProvider implements IStorageProvider {
 			try {
 				field_value = this.getClass().getField(column).get(this);
 			} catch (IllegalAccessException e) {
-				Application.LogError("Database", "StorageProvider.UpdateColumnData() :" + e.toString());
+				Application.logError("Database", "StorageProvider.UpdateColumnData() :" + e.toString());
 			} catch (IllegalArgumentException e) {
-				Application.LogError("Database","StorageProvider.UpdateColumnData() :" + e.toString());
+				Application.logError("Database","StorageProvider.UpdateColumnData() :" + e.toString());
 			} catch (NoSuchFieldException e) {
-				Application.LogError("Database","StorageProvider.UpdateColumnData() :" + e.toString());
+				Application.logError("Database","StorageProvider.UpdateColumnData() :" + e.toString());
 			}
 			Database.appendColumnData(column,field_value);
 		}
@@ -70,32 +70,32 @@ public abstract class StorageProvider implements IStorageProvider {
 		boolean operation_status;
 	// call before save
 		skip_insert_update_events = true;
-		this.OnBeforeSave();     
+		this.onBeforeSave();     
 		if(this.id <= 0) {
-			operation_status = this.Insert();
+			operation_status = this.insert();
 		} else {
-			operation_status = this.Update();
+			operation_status = this.update();
 		}
 	// call after save
-		this.OnAfterSave();
+		this.onAfterSave();
 		skip_insert_update_events = false;
 		return operation_status;
 	}
 	
 	@Override
-	public boolean Insert() {
+	public boolean insert() {
 		long result;
 		this.UpdateColumnData();
 		// call before insert event
 		if(!this.skip_insert_update_events){
-			this.OnBeforeInsert();
+			this.onBeforeInsert();
 		}		
 		result = Database.addRow();
 		if(result > 0) {
 			this.id = result;
 		// call after insert event
 			if(!this.skip_insert_update_events){
-				this.OnAfterInsert();
+				this.onAfterInsert();
 			}
 			return true;	
 		} else {
@@ -104,18 +104,18 @@ public abstract class StorageProvider implements IStorageProvider {
 	}
 
 	@Override
-	public boolean Update() {
+	public boolean update() {
 		long result;
 		this.UpdateColumnData();
 		// call before update event
 		if(!this.skip_insert_update_events){
-			this.OnBeforeUpdate();
+			this.onBeforeUpdate();
 		}		
 		result = Database.updateRow(this.id);
 		if(result > 0) {
 		// call after update event
 			if(!this.skip_insert_update_events){
-				this.OnAfterUpdate();
+				this.onAfterUpdate();
 			}
 			return true;	
 		} else {
@@ -128,15 +128,15 @@ public abstract class StorageProvider implements IStorageProvider {
 	 * @return Returns TRUE if it was deleted, FALSE if failed.
 	 */
 	@Override
-	public boolean Delete() {
+	public boolean delete() {
 		// NR: TODO: Clear the current object variables as well & close DB [Destroy]
 		boolean result=false;;
-		this.OnBeforeDelete();
+		this.onBeforeDelete();
 		if(this.id > 0) {
 			result = Database.deleteRow(this.id);			
 		}
 		if(result) {
-			this.OnAfterDelete();
+			this.onAfterDelete();
 		}		
 		return result;
 	}
@@ -146,15 +146,15 @@ public abstract class StorageProvider implements IStorageProvider {
 	 * @return Returns TRUE if it was deleted, FALSE if failed.
 	 */
 	@Override
-	public boolean Delete(String condition) {
+	public boolean delete(String condition) {
 		// NR: TODO: Clear the current object variables as well & close DB [Destroy]
 		boolean result=false;;
-		this.OnBeforeDelete();
+		this.onBeforeDelete();
 		if(condition != "") {
 			result = Database.deleteRow(condition);
 		}
 		if(result) {
-			this.OnAfterDelete();
+			this.onAfterDelete();
 		}		
 		return result;
 	}
@@ -169,7 +169,7 @@ public abstract class StorageProvider implements IStorageProvider {
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void LoadData(long id){
+	public void loadData(long id){
 		String[] columns = this.getAllColumns();
 		Cursor data_cursor = Database.getDataCursor(columns, "id=?", new String[]{String.valueOf(id)}, "", "","","asc");
 		if(data_cursor != null) {
@@ -220,7 +220,7 @@ public abstract class StorageProvider implements IStorageProvider {
 									for(int i=0 ; i< values.length ; i++) {
 										if((values[i] != null) && !(values[i].equals(""))) {
 											IStorageProvider store_object = (IStorageProvider) field.getType().newInstance();
-											store_object.LoadData(Long.valueOf(values[i]).longValue());
+											store_object.loadData(Long.valueOf(values[i]).longValue());
 											Array.set(field_value, i,store_object);
 										} else {
 											Array.set(field_value, i,null);
@@ -246,7 +246,7 @@ public abstract class StorageProvider implements IStorageProvider {
 									for(int i=0 ; i< values.length ; i++) {
 										if((values[i] != null) && !(values[i].equals(""))) {
 											IStorageProvider store_object = (IStorageProvider) field.getType().newInstance();
-											store_object.LoadData(Long.valueOf(values[i]).longValue());
+											store_object.loadData(Long.valueOf(values[i]).longValue());
 											add.invoke(field_value, store_object);
 										} else {
 											add.invoke(field_value, (Object)null);
@@ -273,12 +273,12 @@ public abstract class StorageProvider implements IStorageProvider {
 							} else if(IStorageProvider.class.isAssignableFrom(field.getType().getClass())) {   // If Foreign Key
 								//NR cast the value to IStorageProvider Type and do LoadData based on ForeignKey value from DB.
 								IStorageProvider store_object = (IStorageProvider) field.getType().newInstance();
-								store_object.LoadData(data_cursor.getLong(column_index));
+								store_object.loadData(data_cursor.getLong(column_index));
 								field_value = store_object; 
 							} else {
 								//NR cast the value to proper type
 								//NR: This is Risky and Prone to fail.
-								Application.LogWarning("Database","DataType not Supported.Trying Generic Parse un-supported Data type");
+								Application.logWarning("Database","DataType not Supported.Trying Generic Parse un-supported Data type");
 								field_value = Util.tryParse(field.getType(),data_cursor.getString(column_index));
 							}
 	
@@ -288,19 +288,19 @@ public abstract class StorageProvider implements IStorageProvider {
 						field.set(this,field_value);	
 						
 					} catch (IllegalAccessException e) {
-						Application.LogError("Database", "StorageProvider.LoadData() on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database", "StorageProvider.LoadData() on column[" + column + "] FAILED :" + e.toString());
 					} catch (IllegalArgumentException e) {
-						Application.LogError("Database","StorageProvider.LoadData() on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database","StorageProvider.LoadData() on column[" + column + "] FAILED :" + e.toString());
 					} catch (NoSuchFieldException e) {
-						Application.LogError("Database","StorageProvider.LoadData() on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database","StorageProvider.LoadData() on column[" + column + "] FAILED :" + e.toString());
 					} catch (ClassCastException e) {
-						Application.LogError("Database","StorageProvider.LoadData() on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database","StorageProvider.LoadData() on column[" + column + "] FAILED :" + e.toString());
 					} catch (InstantiationException e) {
-						Application.LogError("Database","StorageProvider.LoadData() on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database","StorageProvider.LoadData() on column[" + column + "] FAILED :" + e.toString());
 					} catch (NoSuchMethodException e) {
-						Application.LogError("Database","StorageProvider.LoadData() on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database","StorageProvider.LoadData() on column[" + column + "] FAILED :" + e.toString());
 					} catch (InvocationTargetException e) {
-						Application.LogError("Database","StorageProvider.LoadData() on column[" + column + "] FAILED :" + e.toString());
+						Application.logError("Database","StorageProvider.LoadData() on column[" + column + "] FAILED :" + e.toString());
 					}
 				}
 			}
@@ -386,7 +386,7 @@ public abstract class StorageProvider implements IStorageProvider {
 										for(int i=0 ; i< values.length ; i++) {
 											if((values[i] != null) && !(values[i].equals(""))) {
 												IStorageProvider store_object = (IStorageProvider) field.getType().newInstance();
-												store_object.LoadData(Long.valueOf(values[i]).longValue());
+												store_object.loadData(Long.valueOf(values[i]).longValue());
 												Array.set(field_value, i,store_object);
 											} else {
 												Array.set(field_value, i,null);
@@ -412,7 +412,7 @@ public abstract class StorageProvider implements IStorageProvider {
 										for(int i=0 ; i< values.length ; i++) {
 											if((values[i] != null) && !(values[i].equals(""))) {
 												IStorageProvider store_object = (IStorageProvider) field.getType().newInstance();
-												store_object.LoadData(Long.valueOf(values[i]).longValue());
+												store_object.loadData(Long.valueOf(values[i]).longValue());
 												add.invoke(field_value, store_object);
 											} else {
 												add.invoke(field_value, (Object)null);
@@ -439,12 +439,12 @@ public abstract class StorageProvider implements IStorageProvider {
 								} else if(IStorageProvider.class.isAssignableFrom(field.getType().getClass())) {   // If Foreign Key
 									//NR cast the value to IStorageProvider Type and do LoadData based on ForeignKey value from DB.
 									IStorageProvider store_object = (IStorageProvider) field.getType().newInstance();
-									store_object.LoadData(results_cursor.getLong(column_index));
+									store_object.loadData(results_cursor.getLong(column_index));
 									field_value = store_object; 
 								} else {
 									//NR cast the value to proper type
 									//NR: This is Risky and Prone to fail.
-									Application.LogWarning("Database","DataType not Supported.Trying Generic Parse un-supported Data type");
+									Application.logWarning("Database","DataType not Supported.Trying Generic Parse un-supported Data type");
 									field_value = Util.tryParse(field.getType(),results_cursor.getString(column_index));
 								}
 		
@@ -454,19 +454,19 @@ public abstract class StorageProvider implements IStorageProvider {
 							field.set(result_object,field_value);	
 							
 						} catch (IllegalAccessException e) {
-							Application.LogError("Database", "StorageProvider.select() on column[" + column + "] FAILED :" + e.toString());
+							Application.logError("Database", "StorageProvider.select() on column[" + column + "] FAILED :" + e.toString());
 						} catch (IllegalArgumentException e) {
-							Application.LogError("Database","StorageProvider.select() on column[" + column + "] FAILED :" + e.toString());
+							Application.logError("Database","StorageProvider.select() on column[" + column + "] FAILED :" + e.toString());
 						} catch (NoSuchFieldException e) {
-							Application.LogError("Database","StorageProvider.select() on column[" + column + "] FAILED :" + e.toString());
+							Application.logError("Database","StorageProvider.select() on column[" + column + "] FAILED :" + e.toString());
 						} catch (ClassCastException e) {
-							Application.LogError("Database","StorageProvider.select() on column[" + column + "] FAILED :" + e.toString());
+							Application.logError("Database","StorageProvider.select() on column[" + column + "] FAILED :" + e.toString());
 						} catch (InstantiationException e) {
-							Application.LogError("Database","StorageProvider.select() on column[" + column + "] FAILED :" + e.toString());
+							Application.logError("Database","StorageProvider.select() on column[" + column + "] FAILED :" + e.toString());
 						} catch (NoSuchMethodException e) {
-							Application.LogError("Database","StorageProvider.select() on column[" + column + "] FAILED :" + e.toString());
+							Application.logError("Database","StorageProvider.select() on column[" + column + "] FAILED :" + e.toString());
 						} catch (InvocationTargetException e) {
-							Application.LogError("Database","StorageProvider.select() on column[" + column + "] FAILED :" + e.toString());
+							Application.logError("Database","StorageProvider.select() on column[" + column + "] FAILED :" + e.toString());
 						}
 					}
 				
@@ -474,9 +474,9 @@ public abstract class StorageProvider implements IStorageProvider {
 					results.add(result_object);
 					
 				} catch (InstantiationException ex) {
-					Application.LogError("Database", "StorageProvider.select()  FAILED :" + ex.toString());
+					Application.logError("Database", "StorageProvider.select()  FAILED :" + ex.toString());
 				} catch (IllegalAccessException ex) {
-					Application.LogError("Database", "StorageProvider.select()  FAILED :" + ex.toString());
+					Application.logError("Database", "StorageProvider.select()  FAILED :" + ex.toString());
 				}
 
 			}
@@ -489,19 +489,19 @@ public abstract class StorageProvider implements IStorageProvider {
 		return String.valueOf(this.getID());
 	}
 	
-	public abstract void OnAfterSave();
+	public abstract void onAfterSave();
 
-	public abstract void OnBeforeSave();
+	public abstract void onBeforeSave();
 
-	public abstract void OnAfterInsert();
+	public abstract void onAfterInsert();
 
-	public abstract void OnBeforeInsert();
+	public abstract void onBeforeInsert();
 
-	public abstract void OnBeforeUpdate();
+	public abstract void onBeforeUpdate();
 
-	public abstract void OnAfterUpdate();
+	public abstract void onAfterUpdate();
 
-	public abstract void OnBeforeDelete();
+	public abstract void onBeforeDelete();
 
-	public abstract void OnAfterDelete();
+	public abstract void onAfterDelete();
 }

@@ -18,7 +18,7 @@ public class SyncBatchExecutorThread implements Runnable {
 			try {
 				sync_object.startSync();
 			} catch (GenericSyncException e) {
-				Application.LogError("Skipping other Sync_objects in the batch["+ sync_object.batch_id +"]");
+				Application.logError("Skipping other Sync_objects in the batch["+ sync_object.batch_id +"]");
 				break;
 			}
 		}

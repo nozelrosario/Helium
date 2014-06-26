@@ -25,7 +25,7 @@ public class SyncRegister extends StorageProvider {
 	}
 	
 	@Override
-	public ArrayList<String> Columns() {
+	public ArrayList<String> columns() {
 		ArrayList<String> columns = new ArrayList<String>();
 		columns.add("sync_object_name");
 		columns.add("last_sync_date_time");
@@ -35,7 +35,7 @@ public class SyncRegister extends StorageProvider {
 	}
 
 	@Override
-	public ArrayList<String> ColumnOptions() {
+	public ArrayList<String> columnOptions() {
 		ArrayList<String> column_options = new ArrayList<String>();
 		column_options.add("TEXT NOT NULL UNIQUE");
 		column_options.add("INTEGER");
@@ -97,8 +97,7 @@ public class SyncRegister extends StorageProvider {
 						    JSONObject json_data_object = data.getJSONObject(i);
 						    if(json_data_object != null) {
 						    	SyncedStorageProvider sync_data_object = (SyncedStorageProvider) Class.forName(this.sync_object_name).newInstance();
-								sync_data_object.LoadData(json_data_object);
-								sync_data_object.Save();
+								sync_data_object.saveSyncData(json_data_object);
 						    }
 						    
 						}
@@ -129,7 +128,7 @@ public class SyncRegister extends StorageProvider {
 			this.error_description = "none";
 			this.Save();
 		} else {
-			Application.LogError("SyncQueue", "Sync Faliure : " + sync_faliure_reason);
+			Application.logError("SyncQueue", "Sync Faliure : " + sync_faliure_reason);
 		// NR: Register Failed Sync
 			this.sync_status = SyncStatus.ERROR;
 			//this.last_sync_date_time = keep as it is;  //NR: @@@@@@ last_sync_date_time should not be changed else, sync logic will fail. @@@@@@@
@@ -140,49 +139,49 @@ public class SyncRegister extends StorageProvider {
 	}
 	
 	@Override
-	public void OnAfterSave() {
+	public void onAfterSave() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnBeforeSave() {
+	public void onBeforeSave() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnAfterInsert() {
+	public void onAfterInsert() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnBeforeInsert() {
+	public void onBeforeInsert() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnBeforeUpdate() {
+	public void onBeforeUpdate() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnAfterUpdate() {
+	public void onAfterUpdate() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnBeforeDelete() {
+	public void onBeforeDelete() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void OnAfterDelete() {
+	public void onAfterDelete() {
 		// TODO Auto-generated method stub
 		
 	}

@@ -30,7 +30,7 @@ public class SyncRegisterThread implements Runnable {
 			try {
 				sync_register_entry.startSync();
 			} catch (GenericSyncException e) {
-				Application.LogError("Sync Failed for Entity : ["+ this.sync_object_name +"]");
+				Application.logError("Sync Failed for Entity : ["+ this.sync_object_name +"]");
 			}
 		}
 		
