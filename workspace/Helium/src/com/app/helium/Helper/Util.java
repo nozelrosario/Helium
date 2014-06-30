@@ -5,6 +5,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+
+import com.app.helium.Application;
+
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.util.Base64;
 
 
@@ -86,4 +91,18 @@ public class Util {
 			String result = Base64.encodeToString(digest.digest(),Base64.DEFAULT);
 			return result;
 		}
+		
+	public static boolean isDeviceConnectivityOnline() {
+
+		ConnectivityManager con_manager = (ConnectivityManager) Application
+				.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		if (con_manager.getActiveNetworkInfo() != null
+				&& con_manager.getActiveNetworkInfo().isAvailable()
+				&& con_manager.getActiveNetworkInfo().isConnected()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

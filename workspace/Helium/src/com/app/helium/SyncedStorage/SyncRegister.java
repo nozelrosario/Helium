@@ -8,7 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.app.helium.Application;
-import com.app.helium.Communication.OperationProvider;
+import com.app.helium.Communication.RequestType;
 import com.app.helium.Helper.Util;
 
 import android.database.Cursor;
@@ -82,7 +82,7 @@ public class SyncRegister extends StorageProvider {
 			request_json.put("last_synced_date_time", Util.convertDateTimeToDBFormat(this.last_sync_date_time));
 		//NR: create new sync proxy and trigger sync
 			SyncProxy sync_proxi = new SyncProxy();
-			response_json = sync_proxi.send(OperationProvider.PULL_DATA_SYNC, request_json);
+			response_json = sync_proxi.requestSync(RequestType.PULL_DATA_SYNC, request_json);
 		//NR: TODO: Expected JSON = {sync_success:true/false , sync_error:"error if any" , data_json:[ {<IStorageProvider>}, {<IStorageProvider>}, {<IStorageProvider>}, ... ]}
 			if(response_json != null) {
 				String sync_error = "none";

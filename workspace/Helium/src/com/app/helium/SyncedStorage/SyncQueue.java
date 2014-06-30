@@ -6,7 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.app.helium.Application;
-import com.app.helium.Communication.OperationProvider;
+import com.app.helium.Communication.RequestType;
 
 import android.database.Cursor;
 
@@ -159,7 +159,7 @@ public class SyncQueue extends StorageProvider {
 			JSONObject sync_data_json = sync_data_object.getJSON();
 		//NR: create new sync proxy and trigger sync
 			SyncProxy sync_proxi = new SyncProxy();
-			response_json = sync_proxi.send(OperationProvider.PUSH_DATA_SYNC,sync_data_json);
+			response_json = sync_proxi.requestSync(RequestType.PUSH_DATA_SYNC,sync_data_json);
 		//NR: TODO: Expected JSON = {remote_id:123 , sync_success:true/false , sync_error:"error if any"}
 			if(response_json != null) {
 				long remote_id = 0;
