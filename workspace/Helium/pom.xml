@@ -6,13 +6,5 @@
   <packaging>jar</packaging>
   <name>Helium</name>
   <description>Helium</description>
-  
-  <dependencies>
-    <dependency>
-        <groupId>org.springframework.android</groupId>
-        <artifactId>spring-android</artifactId>
-        <version>1.0.1.RELEASE</version>
-    </dependency>
-  </dependencies>
 
 </project>
