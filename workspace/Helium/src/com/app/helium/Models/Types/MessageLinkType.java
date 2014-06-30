@@ -1,4 +1,4 @@
-package com.app.helium;
+package com.app.helium.Models.Types;
 
 public enum MessageLinkType {
 

@@ -1,4 +1,6 @@
 package com.app.helium;
+//NR: TODO : in general try to use some library for data parsing eg. GSON : https://code.google.com/p/google-gson/
+
 
 import com.app.helium.SyncedStorage.SyncManager;
 

@@ -81,15 +81,15 @@ public class SyncRegister extends StorageProvider {
 			request_json.put("last_synced_date_time", Util.convertDateTimeToDBFormat(this.last_sync_date_time));
 		//NR: create new sync proxy and trigger sync
 			SyncProxy sync_proxi = new SyncProxy();
-			response_json = sync_proxi.send("PULL_DATA_SYNC", request_json.toString());
-		//NR: TODO: Expected JSON = {sync_success:true/false , sync_error:"error if any" , data:[ {<IStorageProvider>}, {<IStorageProvider>}, {<IStorageProvider>}, ... ]}
+			response_json = sync_proxi.send("PULL_DATA_SYNC", request_json);
+		//NR: TODO: Expected JSON = {sync_success:true/false , sync_error:"error if any" , data_json:[ {<IStorageProvider>}, {<IStorageProvider>}, {<IStorageProvider>}, ... ]}
 			if(response_json != null) {
 				String sync_error = "none";
 				JSONArray data = null;
 				boolean sync_success = false;
 				if(response_json.has("sync_error")) sync_error = response_json.getString("sync_error");
 				if(response_json.has("sync_success")) sync_success = response_json.getBoolean("sync_success");
-				if(response_json.has("data")) data = response_json.getJSONArray("data");
+				if(response_json.has("data_json")) data = response_json.getJSONArray("data_json");
 				
 				if(sync_success) {
 					if(data != null) {

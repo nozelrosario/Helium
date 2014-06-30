@@ -3,7 +3,7 @@ package com.app.helium.SyncedStorage;
 public class ReferenceObjectNotSyncedException extends Exception {
 
 	/**
-	 * 
+	 * TODO : add description
 	 */
 	private static final long serialVersionUID = 1L;
 	private String message;

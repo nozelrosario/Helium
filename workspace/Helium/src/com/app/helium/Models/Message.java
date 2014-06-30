@@ -1,61 +1,62 @@
-package com.app.helium;
+package com.app.helium.Models;
 
 import java.util.ArrayList;
+
+import org.joda.time.DateTime;
+
+import com.app.helium.Models.Types.MessageLinkType;
 import com.app.helium.SyncedStorage.SyncedStorageProvider;
 
-public class Contact extends SyncedStorageProvider{
+public class Message extends SyncedStorageProvider {
 
-	public String login;
-	public String first_name;
-	public String last_name;
-	public String phone;
-	public String email;
-	public String profile_picture;
-	public String status_message;
-	public Availablity availablity;
-	public String latest_geo_location;
-	public boolean is_blocked;
-	public boolean is_approved;
+	public Contact from_user;
+	public Contact to_user;
+	public MessageLinkType message_linked_to;
+	public TravelBroadcast linked_broadcast;
+	public ScheduledTravel linked_scheduled_travel;
+	public DateTime sent_date_time;
+	public boolean is_read;
+	public DateTime recieved_date_time;
+	public String message_text;
 	
-	public Contact() {
+	public Message() {
 		super();
-		this.initializeTable("Contacts");
+		this.initializeTable("Message");
 	}
+	
 	
 	public ArrayList<String> columns() {
 		ArrayList<String> columns = new ArrayList<String>();
 		columns.addAll(super.columns());
-		columns.add("login");
-		columns.add("first_name");
-		columns.add("last_name");
-		columns.add("phone");
-		columns.add("email");
-		columns.add("profile_picture");
+		columns.add("from_user");
+		columns.add("to_user");
+		columns.add("message_linked_to");
+		columns.add("linked_broadcast");
+		columns.add("linked_scheduled_travel");
+		columns.add("sent_date_time");
 		columns.add("status_message");
-		columns.add("availablity");
-		columns.add("latest_geo_location");
-		columns.add("is_blocked");
-		columns.add("is_approved");
+		columns.add("is_read");
+		columns.add("recieved_date_time");
+		columns.add("message_text");
 		return columns;
 	}
 
 	public ArrayList<String> columnOptions() {
 		ArrayList<String> column_options = new ArrayList<String>();
 		column_options.addAll(super.columnOptions());
+		column_options.add("INTEGER");
+		column_options.add("INTEGER");
+		column_options.add("TEXT");
+		column_options.add("INTEGER");
+		column_options.add("INTEGER");
+		column_options.add("INTEGER");
 		column_options.add("TEXT");
 		column_options.add("TEXT");
-		column_options.add("TEXT");
-		column_options.add("TEXT");
-		column_options.add("TEXT");
-		column_options.add("TEXT");
-		column_options.add("TEXT");
-		column_options.add("TEXT");
-		column_options.add("TEXT");
-		column_options.add("TEXT");
+		column_options.add("INTEGER");
 		column_options.add("TEXT");
 		return column_options;
 	}
-	
+
 	@Override
 	public void onAfterSave() {
 		// TODO Auto-generated method stub
@@ -103,7 +104,5 @@ public class Contact extends SyncedStorageProvider{
 		// TODO Auto-generated method stub
 		
 	}
-
-
 
 }

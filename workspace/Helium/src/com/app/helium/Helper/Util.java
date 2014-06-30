@@ -1,9 +1,12 @@
 package com.app.helium.Helper;
 
 import java.lang.reflect.InvocationTargetException;
-
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import android.util.Base64;
+
 
 public class Util {
 
@@ -75,5 +78,12 @@ public class Util {
 			} else {
 				return null;
 			}
+		}	 
+		
+		public static String calculateMD5(String contentToEncode) throws NoSuchAlgorithmException {
+			MessageDigest digest = MessageDigest.getInstance("MD5");
+			digest.update(contentToEncode.getBytes());
+			String result = Base64.encodeToString(digest.digest(),Base64.DEFAULT);
+			return result;
 		}
 }

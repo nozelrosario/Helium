@@ -158,7 +158,7 @@ public class SyncQueue extends StorageProvider {
 			JSONObject sync_data_json = sync_data_object.getJSON();
 		//NR: create new sync proxy and trigger sync
 			SyncProxy sync_proxi = new SyncProxy();
-			response_json = sync_proxi.send("PUSH_DATA_SYNC",sync_data_json.toString());
+			response_json = sync_proxi.send("PUSH_DATA_SYNC",sync_data_json);
 		//NR: TODO: Expected JSON = {remote_id:123 , sync_success:true/false , sync_error:"error if any"}
 			if(response_json != null) {
 				long remote_id = 0;

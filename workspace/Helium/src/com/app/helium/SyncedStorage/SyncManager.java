@@ -3,10 +3,10 @@ package com.app.helium.SyncedStorage;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import com.app.helium.Contact;
-import com.app.helium.Message;
-import com.app.helium.ScheduledTravel;
-import com.app.helium.TravelBroadcast;
+import com.app.helium.Models.Contact;
+import com.app.helium.Models.Message;
+import com.app.helium.Models.ScheduledTravel;
+import com.app.helium.Models.TravelBroadcast;
 
 public final class SyncManager {
 	private static ArrayList<String> sync_entities;

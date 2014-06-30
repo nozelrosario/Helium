@@ -1,22 +1,28 @@
-package com.app.helium;
+package com.app.helium.Models;
 
 import java.util.ArrayList;
 
-import org.json.JSONObject;
-
+import com.app.helium.Models.Types.Availablity;
 import com.app.helium.SyncedStorage.SyncedStorageProvider;
 
-public class TravelBroadcast extends SyncedStorageProvider{
+public class Contact extends SyncedStorageProvider{
 
+	public String login;
+	public String first_name;
+	public String last_name;
+	public String phone;
+	public String email;
+	public String profile_picture;
+	public String status_message;
+	public Availablity availablity;
+	public String latest_geo_location;
+	public boolean is_blocked;
+	public boolean is_approved;
 	
-	
-	
-	
-	public TravelBroadcast() {
+	public Contact() {
 		super();
-		this.initializeTable("TravelBroadcast");
+		this.initializeTable("Contacts");
 	}
-	
 	
 	public ArrayList<String> columns() {
 		ArrayList<String> columns = new ArrayList<String>();
@@ -52,12 +58,6 @@ public class TravelBroadcast extends SyncedStorageProvider{
 		return column_options;
 	}
 	
-	@Override
-	public void loadData(JSONObject json_data) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public void onAfterSave() {
 		// TODO Auto-generated method stub
@@ -105,5 +105,7 @@ public class TravelBroadcast extends SyncedStorageProvider{
 		// TODO Auto-generated method stub
 		
 	}
+
+
 
 }

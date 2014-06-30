@@ -15,6 +15,11 @@ public interface IStorageProvider {
 	public long getID();
 	public String toString();
 	public String getTableName();
+	
+	//NR: TODO: Implement Observer Pattern for supporting more events
+	//NR: check java.util.EventListener & java.util.EventObject for implementing Events [http://www.java2s.com/Code/Java/Event/CreatingaCustomEvent.htm]
+	// public void addEventListener();
+	// public void removeEventListener();
 	public void onAfterSave();
 	public void onBeforeSave();
 	public void onAfterInsert();

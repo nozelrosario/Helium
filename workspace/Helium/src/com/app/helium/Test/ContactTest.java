@@ -3,8 +3,8 @@ package com.app.helium.Test;
 import java.util.Random;
 
 import com.app.helium.Application;
-import com.app.helium.Availablity;
-import com.app.helium.Contact;
+import com.app.helium.Models.Contact;
+import com.app.helium.Models.Types.Availablity;
 import com.app.helium.SyncedStorage.ReferenceObjectNotSyncedException;
 import com.app.helium.SyncedStorage.SyncQueue;
 
