@@ -22,12 +22,12 @@ public class GenericSyncException extends Exception {
         super(cause);
     }
 	
-	public GenericSyncException(SyncQueue sync_object, String reason) {
+	public GenericSyncException(PushSyncQueue sync_object, String reason) {
 		this.message = "Sync Failed For => Record: " + sync_object.sync_record_id + "of Object: " + sync_object.sync_object_name + " with Batch_ID: " + sync_object.batch_id + "  Faliure Reason : " + reason;
 		//Application.LogError(this.message);
 	}
 	
-	public GenericSyncException(SyncRegister sync_register_object, String reason) {
+	public GenericSyncException(PullSyncQueue sync_register_object, String reason) {
 		this.message = "Sync Failed For =>  Entity : " + sync_register_object.sync_object_name + "  Faliure Reason : " + reason;
 		//Application.LogError(this.message);
 	}

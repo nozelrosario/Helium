@@ -6,16 +6,16 @@ import com.app.helium.Application;
 
 public class SyncBatchExecutorThread implements Runnable {
 
-	private ArrayList<SyncQueue> batch_to_sync;
+	private ArrayList<PushSyncQueue> batch_to_sync;
 	
-	public SyncBatchExecutorThread(ArrayList<SyncQueue> batch_to_sync) {
+	public SyncBatchExecutorThread(ArrayList<PushSyncQueue> batch_to_sync) {
 		this.batch_to_sync = batch_to_sync;
 	}
 	
 	@Override
 	public void run() {
 		SyncManager.notifyPushSyncThreadStarted();
-		for(SyncQueue sync_object : this.batch_to_sync) {
+		for(PushSyncQueue sync_object : this.batch_to_sync) {
 			try {
 				sync_object.startSync();
 			} catch (GenericSyncException e) {

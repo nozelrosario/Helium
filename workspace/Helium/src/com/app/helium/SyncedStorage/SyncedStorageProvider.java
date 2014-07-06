@@ -14,7 +14,7 @@ import com.app.helium.Application;
 import com.app.helium.Helper.Util;
 import android.database.Cursor;
 
-public abstract class SyncedStorageProvider extends StorageProvider implements ISyncAdapter {
+public abstract class SyncedStorageProvider extends StorageProvider implements ISyncProvider {
 
 	public DateTime last_modified_date_time;
 	public DateTime last_sync_date_time;

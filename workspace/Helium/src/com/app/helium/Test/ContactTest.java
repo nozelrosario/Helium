@@ -6,7 +6,7 @@ import com.app.helium.Application;
 import com.app.helium.Models.Contact;
 import com.app.helium.Models.Types.Availablity;
 import com.app.helium.SyncedStorage.ReferenceObjectNotSyncedException;
-import com.app.helium.SyncedStorage.SyncQueue;
+import com.app.helium.SyncedStorage.PushSyncQueue;
 
 public class ContactTest implements ITestable {
 	public Contact test_contact;
@@ -81,7 +81,7 @@ public class ContactTest implements ITestable {
 	public void checkSync() {
 		Application.logInfo("Calling TriggerSync()  for Contact....");
 		test_contact.triggerSync();
-		SyncQueue sync_queue_entry = new SyncQueue(test_contact);
+		PushSyncQueue sync_queue_entry = new PushSyncQueue(test_contact);
 		
 		Application.logInfo("sync_queue_entry.batch_id : " + sync_queue_entry.batch_id);
 		Application.logInfo("sync_queue_entry.batch_sequence : " + sync_queue_entry.batch_sequence);
