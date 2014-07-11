@@ -34,7 +34,7 @@ public class SyncManagerTest  implements ITestable {
 
 		@Override
 		public void run() {
-			Application.logInfo("Start Push Sync Listener called...");		
+			Application.logInfo("NOTIFICATION!!!...Start Push Sync Listener called...");		
 		}
 		
 	}
@@ -43,7 +43,7 @@ public class SyncManagerTest  implements ITestable {
 
 		@Override
 		public void run() {
-			Application.logInfo("Finished Push Sync Listener called...");		
+			Application.logInfo("NOTIFICATION!!!...Finished Push Sync Listener called...");		
 		}
 		
 	}
@@ -52,7 +52,7 @@ public class SyncManagerTest  implements ITestable {
 
 		@Override
 		public void run() {
-			Application.logInfo("Start Pull Sync Listener called...");		
+			Application.logInfo("NOTIFICATION!!!...Start Pull Sync Listener called...");		
 		}
 		
 	}
@@ -61,7 +61,7 @@ public class SyncManagerTest  implements ITestable {
 
 		@Override
 		public void run() {
-			Application.logInfo("Finished Pull Sync Listener called...");		
+			Application.logInfo("NOTIFICATION!!!...Finished Pull Sync Listener called...");		
 		}
 		
 	}
