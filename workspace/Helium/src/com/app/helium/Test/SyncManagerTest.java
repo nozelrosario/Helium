@@ -28,7 +28,7 @@ public class SyncManagerTest  implements ITestable {
 				}
 	}
 	
-	// NR: Listener Classes
+	// NR: Listener Implementations Classes
 	
 	public class PushSyncStartNotify implements IPushSyncStartedListener {
 

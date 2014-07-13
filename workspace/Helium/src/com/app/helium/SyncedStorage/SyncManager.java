@@ -43,7 +43,7 @@ public final class SyncManager {
 	
 	public static void notifyPullSyncThreadStarted(PullSyncQueue sync_register_entry) {
 		PULL_SYNC_ACTIVE_THREADS = PULL_SYNC_ACTIVE_THREADS + 1;
-		PUSH_SYNC_BUSY = (PUSH_SYNC_ACTIVE_THREADS <= 0);
+		PUSH_SYNC_BUSY = (PUSH_SYNC_ACTIVE_THREADS > 0);
 		
 		//NR: Fire sync thread started events
 		PullSyncEventInfo event_info = new PullSyncEventInfo(sync_register_entry.sync_object_name,sync_register_entry.sync_status,sync_register_entry.last_sync_date_time,sync_register_entry.error_description);
@@ -55,7 +55,7 @@ public final class SyncManager {
 	
 	public static void notifyPushSyncThreadFinished() {
 		PUSH_SYNC_ACTIVE_THREADS = PUSH_SYNC_ACTIVE_THREADS - 1;
-		PUSH_SYNC_BUSY = (PUSH_SYNC_ACTIVE_THREADS <= 0);
+		PUSH_SYNC_BUSY = (PUSH_SYNC_ACTIVE_THREADS > 0);
 		PushSyncEventInfo event_info = new PushSyncEventInfo();
 		for(IPushSyncThreadFinishedListener listener : push_sync_thread_finished_listeners) {
 			listener.run(event_info);
@@ -71,7 +71,7 @@ public final class SyncManager {
 	
 	public static void notifyPullSyncThreadFinished(PullSyncQueue sync_register_entry) {
 		PULL_SYNC_ACTIVE_THREADS = PULL_SYNC_ACTIVE_THREADS - 1;
-		PUSH_SYNC_BUSY = (PUSH_SYNC_ACTIVE_THREADS <= 0);
+		PUSH_SYNC_BUSY = (PUSH_SYNC_ACTIVE_THREADS > 0);
 		//NR: Fire sync complete events
 		PullSyncEventInfo event_info = new PullSyncEventInfo(sync_register_entry.sync_object_name,sync_register_entry.sync_status,sync_register_entry.last_sync_date_time,sync_register_entry.error_description);
 		for(IPullSyncThreadFinishedListener listener : pull_sync_thread_finished_listeners) {

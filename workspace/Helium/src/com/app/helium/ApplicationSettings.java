@@ -9,7 +9,7 @@ public class ApplicationSettings {			// Singleton Class
 	public String database_name = "Helium";
 	public String LogLevel ="Error|Info|Warning|Debug|Verbose";    // Error|Info|Warning|Debug|Verbose
 	public String LoggerTag = "Helium";
-
+	
 	
 	private ApplicationSettings() {
 		// load application data from config  if required

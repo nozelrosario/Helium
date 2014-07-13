@@ -1,5 +1,7 @@
 package com.app.helium.Services;
 
+import com.app.helium.Application;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -11,6 +13,7 @@ public class SyncService extends Service {
 	  @Override
 	  public int onStartCommand(Intent intent, int flags, int startId) {
 		  // Strat the sync manager and start sync
+		  Application.logInfo("Sync Service","Started service...and...running");
 	    return Service.START_NOT_STICKY;
 	  }
 
