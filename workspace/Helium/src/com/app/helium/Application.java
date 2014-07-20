@@ -2,9 +2,11 @@ package com.app.helium;
 //NR: TODO : in general try to use some library for data parsing eg. GSON : https://code.google.com/p/google-gson/
 
 
+import com.app.helium.Services.SyncService;
 import com.app.helium.SyncedStorage.SyncManager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 public class Application {
@@ -13,12 +15,14 @@ public class Application {
 	private static String log_level = ApplicationSettings.getInstance().LogLevel;
 	
 	//NR: This is the place for application Initialization
-	// should contain bootstrapping code realted to application
+	// should contain bootstrapping code related to application
 	// load settings /preferences from file/storage , check sync service , check connection etc.
 	public static void initialize(Context ctx) {
 		
 		SyncManager.initialize();
 		setContext(ctx);
+		Intent sync_service = new Intent(ctx, SyncService.class);
+		ctx.startService(sync_service);
 	}
 		
 	public static Context getContext() {
@@ -31,6 +35,10 @@ public class Application {
 	
 	public static String getDatabaseName() {
 		return ApplicationSettings.getInstance().database_name;
+	}
+	
+	public static int getSyncInterval() {
+		return ApplicationSettings.getInstance().sync_interval;
 	}
 	
 	public static void logError(String error_message){

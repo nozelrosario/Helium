@@ -27,17 +27,17 @@
         </activity>
         
         <service
-            android:name=".SyncService"
+            android:name="com.app.helium.Services.SyncService"
             android:icon="@drawable/ic_launcher"
             android:label="@string/service_name" >
         </service>
 
-        <receiver android:name="SyncScheduleReciever" >
+        <receiver android:name="com.app.helium.Services.SyncScheduleReciever" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="StartSyncServiceReciever" >
+        <receiver android:name="com.app.helium.Services.StartSyncServiceReciever" >
         </receiver>
     </application>
 

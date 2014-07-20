@@ -2,6 +2,8 @@ package com.app.helium.Services;
 
 import java.util.Calendar;
 
+import com.app.helium.Application;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -10,8 +12,8 @@ import android.content.Intent;
 
 public class SyncScheduleReciever extends BroadcastReceiver {
 
-	  // restart service every 30 seconds
-	  private static final long REPEAT_TIME = 1000 * 30;
+	  // restart service every getSyncInterval() seconds
+	  private static final long REPEAT_TIME = 1000 * Application.getSyncInterval();
 
 	  @Override
 	  public void onReceive(Context context, Intent intent) {
@@ -20,9 +22,9 @@ public class SyncScheduleReciever extends BroadcastReceiver {
 	    Intent i = new Intent(context, StartSyncServiceReciever.class);
 	    PendingIntent pending = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
 	    Calendar cal = Calendar.getInstance();
-	    // start 30 seconds after boot completed
-	    cal.add(Calendar.SECOND, 30);
-	    // fetch every 30 seconds
+	    // start getSyncInterval() seconds after boot completed
+	    cal.add(Calendar.SECOND, Application.getSyncInterval());
+	    // fetch every getSyncInterval() seconds
 	    // InexactRepeating allows Android to optimize the energy consumption
 	    service.setInexactRepeating(AlarmManager.RTC_WAKEUP,
 	        cal.getTimeInMillis(), REPEAT_TIME, pending);

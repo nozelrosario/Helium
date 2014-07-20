@@ -142,6 +142,8 @@ public final class SyncManager {
 		
 	}
 	
+	//NR: TODO : to merge this logic with SyncedStorageProvider constructor. so the synced entity will register itself on object creation.
+	//           but, this might be performance risk, do investigate.
 	private static void registerSyncEntities() {
 		sync_entities = new ArrayList<String>();
 		sync_entities.add(Contact.class.getName());
