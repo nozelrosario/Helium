@@ -21,7 +21,6 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         Application.initialize(getApplicationContext());
-        
         Test t = new Test();
         t.run();
         

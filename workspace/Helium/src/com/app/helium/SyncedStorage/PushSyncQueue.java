@@ -153,6 +153,7 @@ public class PushSyncQueue extends StorageProvider {
 			// Mark as Busy
 			this.sync_status = SyncStatus.BUSY;
 			this.Save();
+			//this.Database.destroy();
 		
 			SyncedStorageProvider sync_data_object = (SyncedStorageProvider) Class.forName(this.sync_object_name).newInstance();
 			sync_data_object.loadData(this.sync_record_id);

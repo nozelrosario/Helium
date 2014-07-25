@@ -85,6 +85,7 @@ public abstract class StorageProvider implements IStorageProvider {
 	@Override
 	public boolean insert() {
 		long result;
+		boolean success = false;
 		this.UpdateColumnData();
 		// call before insert event
 		if(!this.skip_insert_update_events){
@@ -97,15 +98,22 @@ public abstract class StorageProvider implements IStorageProvider {
 			if(!this.skip_insert_update_events){
 				this.onAfterInsert();
 			}
-			return true;	
-		} else {
-			return false;
-		}		
+			success = true;	
+		}
+		
+		try {
+			//NR: Close the DB connection.
+			Database.destroy();
+		} catch (Throwable e) {
+			Application.logError("Database", "Error while closing DB : " + e.toString());
+		}
+		return success;
 	}
 
 	@Override
 	public boolean update() {
 		long result;
+		boolean success = false;
 		this.UpdateColumnData();
 		// call before update event
 		if(!this.skip_insert_update_events){
@@ -117,10 +125,16 @@ public abstract class StorageProvider implements IStorageProvider {
 			if(!this.skip_insert_update_events){
 				this.onAfterUpdate();
 			}
-			return true;	
-		} else {
-			return false;
-		}	
+			success = true;		
+		} 
+		
+		try {
+			//NR: Close the DB connection.
+			Database.destroy();
+		} catch (Throwable e) {
+			Application.logError("Database", "Error while closing DB : " + e.toString());
+		}
+		return success;
 	}
 
 	/**
@@ -137,7 +151,15 @@ public abstract class StorageProvider implements IStorageProvider {
 		}
 		if(result) {
 			this.onAfterDelete();
-		}		
+		}
+		
+		try {
+			//NR: Close the DB connection.
+			Database.destroy();
+		} catch (Throwable e) {
+			Application.logError("Database", "Error while closing DB : " + e.toString());
+		}
+		
 		return result;
 	}
 	
@@ -155,7 +177,14 @@ public abstract class StorageProvider implements IStorageProvider {
 		}
 		if(result) {
 			this.onAfterDelete();
-		}		
+		}	
+		
+		try {
+			//NR: Close the DB connection.
+			Database.destroy();
+		} catch (Throwable e) {
+			Application.logError("Database", "Error while closing DB : " + e.toString());
+		}
 		return result;
 	}
 

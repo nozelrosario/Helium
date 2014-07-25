@@ -2,11 +2,10 @@ package com.app.helium;
 //NR: TODO : in general try to use some library for data parsing eg. GSON : https://code.google.com/p/google-gson/
 
 
-import com.app.helium.Services.SyncService;
+import com.app.helium.Services.SyncPoller;
 import com.app.helium.SyncedStorage.SyncManager;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 public class Application {
@@ -21,8 +20,7 @@ public class Application {
 		
 		SyncManager.initialize();
 		setContext(ctx);
-		Intent sync_service = new Intent(ctx, SyncService.class);
-		ctx.startService(sync_service);
+		SyncPoller.startSyncPolling(ctx);    //NR: Start Sync poller : Sync Service will be running every getSyncInterval() seconds
 	}
 		
 	public static Context getContext() {
